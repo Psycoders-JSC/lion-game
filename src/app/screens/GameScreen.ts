@@ -245,6 +245,15 @@ export class GameScreen extends Container {
       if (this.levelCompleteTimer >= 120) {
         this.gameState.gameState = "playing";
         this.levelCompleteOverlay.visible = false;
+        // Clear leftover bullets and seeds from previous level
+        for (const b of this.bullets) {
+          this.gameContainer.removeChild(b);
+        }
+        this.bullets = [];
+        for (const s of this.seeds) {
+          this.gameContainer.removeChild(s);
+        }
+        this.seeds = [];
         this.initEnemies();
         this.createExplosion(w / 2, h / 2, 0x00ffff, 50, 15, 1);
       }

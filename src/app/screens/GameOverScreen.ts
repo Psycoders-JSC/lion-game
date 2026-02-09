@@ -38,6 +38,7 @@ export class GameOverScreen extends Container {
   private scoreText: Text;
   private highScoreText: Text;
   private playAgainButton: FancyButton;
+  private mainMenuButton: FancyButton;
 
   constructor() {
     super();
@@ -110,6 +111,41 @@ export class GameOverScreen extends Container {
       engine().audio.sfx.play("main/sounds/sfx-press.wav"),
     );
     this.addChild(this.playAgainButton);
+
+    this.mainMenuButton = new FancyButton({
+      defaultView: createNeonButtonView(0x0a0a2e),
+      hoverView: createNeonButtonView(0x16213e),
+      pressedView: createNeonButtonView(0x0d1b2a),
+      anchor: 0.5,
+      text: new Label({
+        text: "Main Menu",
+        style: {
+          fill: 0x00ffff,
+          align: "center",
+          fontSize: 28,
+        },
+      }),
+      defaultTextAnchor: 0.5,
+      scale: 0.9,
+      animations: {
+        hover: {
+          props: { scale: { x: 1.03, y: 1.03 } },
+          duration: 100,
+        },
+        pressed: {
+          props: { scale: { x: 0.97, y: 0.97 } },
+          duration: 100,
+        },
+      },
+    });
+    this.mainMenuButton.onPress.connect(this.handleMainMenu.bind(this));
+    this.mainMenuButton.onHover.connect(() =>
+      engine().audio.sfx.play("main/sounds/sfx-hover.wav"),
+    );
+    this.mainMenuButton.onDown.connect(() =>
+      engine().audio.sfx.play("main/sounds/sfx-press.wav"),
+    );
+    this.addChild(this.mainMenuButton);
   }
 
   public static setGameOverData(
@@ -127,6 +163,11 @@ export class GameOverScreen extends Container {
   private async handlePlayAgain() {
     const { GameScreen } = await import("./GameScreen");
     engine().navigation.showScreen(GameScreen);
+  }
+
+  private async handleMainMenu() {
+    const { StartScreen } = await import("./StartScreen");
+    engine().navigation.showScreen(StartScreen);
   }
 
   public async prepare() {
@@ -193,8 +234,10 @@ export class GameOverScreen extends Container {
     this.titleText.position.set(centerX, centerY - 80);
     this.scoreText.position.set(centerX, centerY - 25);
     this.highScoreText.position.set(centerX, centerY + 15);
-    this.playAgainButton.position.set(centerX, centerY + 85);
+    this.playAgainButton.position.set(centerX, centerY + 70);
     this.playAgainButton.scale.set(Math.min(1, width / 360));
+    this.mainMenuButton.position.set(centerX, centerY + 140);
+    this.mainMenuButton.scale.set(Math.min(1, width / 360));
   }
 
   public async show() {

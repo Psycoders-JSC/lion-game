@@ -490,13 +490,17 @@ export class GameScreen extends Container {
   /** Expose movement for input handler */
   public moveLeft(): void {
     if (this.gameState.gameState === "playing" && this.player) {
-      this.player.moveLeft(this.gameState.screenWidth);
+      const isFiring = this.keys[" "];
+      const speedMultiplier = isFiring ? 1 : 2;
+      this.player.moveLeft(this.gameState.screenWidth, speedMultiplier);
     }
   }
 
   public moveRight(): void {
     if (this.gameState.gameState === "playing" && this.player) {
-      this.player.moveRight(this.gameState.screenWidth);
+      const isFiring = this.keys[" "];
+      const speedMultiplier = isFiring ? 1 : 2;
+      this.player.moveRight(this.gameState.screenWidth, speedMultiplier);
     }
   }
 

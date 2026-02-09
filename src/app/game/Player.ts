@@ -36,15 +36,15 @@ export class Player extends Sprite {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public moveLeft(_screenWidth: number): void {
+  public moveLeft(_screenWidth: number, speedMultiplier = 1): void {
     if (this.x > this.width / 2) {
-      this.x -= this._speed;
+      this.x -= this._speed * speedMultiplier;
     }
   }
 
-  public moveRight(screenWidth: number): void {
+  public moveRight(screenWidth: number, speedMultiplier = 1): void {
     if (this.x < screenWidth - this.width / 2) {
-      this.x += this._speed;
+      this.x += this._speed * speedMultiplier;
     }
   }
 

@@ -21,6 +21,7 @@ import {
   getSeedScale,
   SPRITE_CONFIG,
 } from "../game/spriteScale";
+import { FireButton, isTouchDevice } from "../ui/FireButton";
 import { GameOverScreen } from "./GameOverScreen";
 
 /** Main gameplay screen */
@@ -40,6 +41,7 @@ export class GameScreen extends Container {
   private livesText!: Text;
   private levelText!: Text;
   private levelCompleteOverlay!: Text;
+  private fireButton?: FireButton;
   private screenShake = 0;
   private gameStartFrames = 0;
   private shootCooldown = 150;
@@ -132,6 +134,13 @@ export class GameScreen extends Container {
     });
     this.levelCompleteOverlay.visible = false;
     this.addChild(this.levelCompleteOverlay);
+
+    if (isTouchDevice()) {
+      this.fireButton = new FireButton();
+      this.fireButton.x = w - 24 - 36;
+      this.fireButton.y = h - 24 - 36;
+      this.addChild(this.fireButton);
+    }
   }
 
   private initEnemies(): void {
@@ -395,7 +404,10 @@ export class GameScreen extends Container {
       this.keys["ArrowRight"] || this.touchRight,
     );
 
-    if (this.keys[" "] && this.gameState.gameState === "playing") {
+    if (
+      (this.keys[" "] || this.touchFire) &&
+      this.gameState.gameState === "playing"
+    ) {
       const now = Date.now();
       if (now - this.lastShootTime > this.shootCooldown) {
         this.doShoot();
@@ -595,6 +607,10 @@ export class GameScreen extends Container {
       (this.levelText.style as { fontSize?: number }).fontSize = fontSize;
       this.levelText.position.set(8, 8 + (fontSize + 4) * 2);
     }
+    if (this.fireButton) {
+      this.fireButton.x = w - 24 - 36;
+      this.fireButton.y = h - 24 - 36;
+    }
   }
 
   /** Expose shoot for input handler */
@@ -611,7 +627,7 @@ export class GameScreen extends Container {
         this.gameState.gameState === "powerUpDrop") &&
       this.player;
     if (canMove) {
-      const isFiring = this.keys[" "];
+      const isFiring = this.keys[" "] || this.touchFire;
       const speedMultiplier = isFiring ? 1 : 2;
       this.player.moveLeft(this.gameState.screenWidth, speedMultiplier);
     }
@@ -623,7 +639,7 @@ export class GameScreen extends Container {
         this.gameState.gameState === "powerUpDrop") &&
       this.player;
     if (canMove) {
-      const isFiring = this.keys[" "];
+      const isFiring = this.keys[" "] || this.touchFire;
       const speedMultiplier = isFiring ? 1 : 2;
       this.player.moveRight(this.gameState.screenWidth, speedMultiplier);
     }
@@ -632,15 +648,33 @@ export class GameScreen extends Container {
   public async show(): Promise<void> {
     this.alpha = 1;
     this.setupInput();
+    if (this.fireButton) {
+      this.fireButton.onDown.connect(() => {
+        this.touchFire = true;
+      });
+      this.fireButton.onUp.connect(() => {
+        this.touchFire = false;
+      });
+      this.fireButton.onUpOut.connect(() => {
+        this.touchFire = false;
+      });
+    }
   }
 
   public async hide(): Promise<void> {
+    this.touchFire = false;
+    if (this.fireButton) {
+      this.fireButton.onDown.disconnectAll();
+      this.fireButton.onUp.disconnectAll();
+      this.fireButton.onUpOut.disconnectAll();
+    }
     this.removeInput();
   }
 
   private keys: Record<string, boolean> = {};
   private touchLeft = false;
   private touchRight = false;
+  private touchFire = false;
   private lastShootTime = 0;
   private boundKeyDown!: (e: KeyboardEvent) => void;
   private boundKeyUp!: (e: KeyboardEvent) => void;
@@ -672,14 +706,30 @@ export class GameScreen extends Container {
       const scaleY = this.gameState.screenHeight / rect.height;
       const canvasX = touchX * scaleX;
       const canvasY = touchY * scaleY;
-      if (canvasY < this.gameState.screenHeight * 0.4) {
+      const w = this.gameState.screenWidth;
+      const h = this.gameState.screenHeight;
+      const inFireButton =
+        this.fireButton &&
+        (() => {
+          const b = this.fireButton!.getTouchBounds(w, h);
+          return (
+            canvasX >= b.left &&
+            canvasX <= b.right &&
+            canvasY >= b.top &&
+            canvasY <= b.bottom
+          );
+        })();
+
+      if (inFireButton) {
+        this.touchFire = true;
+      } else if (canvasY < h * 0.4) {
         const now = Date.now();
         if (now - this.lastShootTime > this.shootCooldown) {
           this.doShoot();
           this.lastShootTime = now;
         }
       } else {
-        const centerX = this.gameState.screenWidth / 2;
+        const centerX = w / 2;
         this.touchLeft = canvasX < centerX;
         this.touchRight = canvasX >= centerX;
       }
@@ -695,16 +745,36 @@ export class GameScreen extends Container {
       const canvas = engine().canvas;
       const rect = canvas.getBoundingClientRect();
       const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
       const scaleX = this.gameState.screenWidth / rect.width;
+      const scaleY = this.gameState.screenHeight / rect.height;
       const canvasX = touchX * scaleX;
-      const centerX = this.gameState.screenWidth / 2;
-      this.touchLeft = canvasX < centerX;
-      this.touchRight = canvasX >= centerX;
+      const canvasY = touchY * scaleY;
+      const w = this.gameState.screenWidth;
+      const h = this.gameState.screenHeight;
+      const inFireButton =
+        this.fireButton &&
+        (() => {
+          const b = this.fireButton!.getTouchBounds(w, h);
+          return (
+            canvasX >= b.left &&
+            canvasX <= b.right &&
+            canvasY >= b.top &&
+            canvasY <= b.bottom
+          );
+        })();
+
+      if (!inFireButton) {
+        const centerX = w / 2;
+        this.touchLeft = canvasX < centerX;
+        this.touchRight = canvasX >= centerX;
+      }
     };
     this.boundTouchEnd = (e: TouchEvent) => {
       e.preventDefault();
       this.touchLeft = false;
       this.touchRight = false;
+      this.touchFire = false;
     };
 
     document.addEventListener("keydown", this.boundKeyDown);

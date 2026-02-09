@@ -262,6 +262,14 @@ export class GameScreen extends Container {
     if (this.keys["ArrowLeft"] || this.touchLeft) this.moveLeft();
     if (this.keys["ArrowRight"] || this.touchRight) this.moveRight();
 
+    if (this.keys[" "] && this.gameState.gameState === "playing") {
+      const now = Date.now();
+      if (now - this.lastShootTime > this.shootCooldown) {
+        this.doShoot();
+        this.lastShootTime = now;
+      }
+    }
+
     if (this.screenShake > 0) {
       this.screenShake -= 0.5 * delta;
       this.gameContainer.x = (Math.random() - 0.5) * this.screenShake;
@@ -506,14 +514,7 @@ export class GameScreen extends Container {
   private setupInput(): void {
     this.boundKeyDown = (e: KeyboardEvent) => {
       this.keys[e.key] = true;
-      if (e.key === " " && this.gameState.gameState === "playing") {
-        e.preventDefault();
-        const now = Date.now();
-        if (now - this.lastShootTime > this.shootCooldown) {
-          this.doShoot();
-          this.lastShootTime = now;
-        }
-      }
+      if (e.key === " ") e.preventDefault();
     };
     this.boundKeyUp = (e: KeyboardEvent) => {
       this.keys[e.key] = false;

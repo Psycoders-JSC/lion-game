@@ -56,8 +56,8 @@ export class Player extends Sprite {
   /** Update sprite tilt based on horizontal movement direction */
   public updateTilt(movingLeft: boolean, movingRight: boolean): void {
     let target = 0;
-    if (movingLeft) target = Player.MAX_TILT;
-    else if (movingRight) target = -Player.MAX_TILT;
+    if (movingLeft) target = -Player.MAX_TILT;
+    else if (movingRight) target = Player.MAX_TILT;
     this._tiltAngle += (target - this._tiltAngle) * Player.TILT_LERP;
     this.angle = this._tiltAngle;
   }

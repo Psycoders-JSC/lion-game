@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { SUPABASE_CONFIG } from "../../../config";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -12,6 +13,9 @@ function getConfig(): SupabaseConfig | null {
   const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
   if (url && key) {
     return { supabaseUrl: url, supabaseKey: key };
+  }
+  if (SUPABASE_CONFIG.supabaseUrl && SUPABASE_CONFIG.supabaseKey) {
+    return SUPABASE_CONFIG;
   }
   return null;
 }

@@ -2,6 +2,10 @@ import { Container, Sprite, Text, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
 import { storage } from "../../engine/utils/storage";
+import {
+  fetchLeaderboard,
+  isLeaderboardAvailable,
+} from "../services/leaderboard";
 import { GameScreen } from "./GameScreen";
 
 const PLAYER_NAME_KEY = "jamInvaderPlayerName";
@@ -34,6 +38,49 @@ export class StartScreen extends Container {
       anchor: { x: 0.5, y: -5.5 },
     });
     this.addChild(this.titleText);
+  }
+
+  private async renderLeaderboardPage() {
+    const listEl = document.getElementById("leaderboardPageList");
+    if (!listEl) return;
+    if (!isLeaderboardAvailable()) {
+      listEl.innerHTML =
+        '<p class="leaderboard-empty">Add Supabase credentials to see leaderboard.</p>';
+      return;
+    }
+    try {
+      listEl.innerHTML = '<p class="leaderboard-loading">Loading...</p>';
+      const entries = await fetchLeaderboard(100);
+      if (entries.length === 0) {
+        listEl.innerHTML = '<p class="leaderboard-empty">No scores yet.</p>';
+        return;
+      }
+      listEl.innerHTML = entries
+        .map(
+          (e, i) =>
+            `<div class="leaderboard-entry">${i + 1}. ${e.player_name}: ${e.score}</div>`,
+        )
+        .join("");
+    } catch {
+      listEl.innerHTML =
+        '<p class="leaderboard-empty">Failed to load leaderboard.</p>';
+    }
+  }
+
+  private handleLeaderboardClick() {
+    document.getElementById("start-overlay")?.classList.add("hidden");
+    document.body.classList.remove("start-overlay-visible");
+    document.body.classList.add("leaderboard-page-visible");
+    const page = document.getElementById("leaderboard-page");
+    page?.classList.remove("hidden");
+    this.renderLeaderboardPage();
+  }
+
+  private handleLeaderboardBack() {
+    document.getElementById("leaderboard-page")?.classList.add("hidden");
+    document.body.classList.remove("leaderboard-page-visible");
+    document.getElementById("start-overlay")?.classList.remove("hidden");
+    document.body.classList.add("start-overlay-visible");
   }
 
   private handlePlay() {
@@ -76,6 +123,18 @@ export class StartScreen extends Container {
     if (playBtn && !playBtn.dataset.wired) {
       playBtn.dataset.wired = "1";
       playBtn.addEventListener("click", () => this.handlePlay());
+    }
+
+    const leaderboardBtn = document.getElementById("startLeaderboardButton");
+    if (leaderboardBtn && !leaderboardBtn.dataset.wired) {
+      leaderboardBtn.dataset.wired = "1";
+      leaderboardBtn.addEventListener("click", () => this.handleLeaderboardClick());
+    }
+
+    const backBtn = document.getElementById("leaderboardBackButton");
+    if (backBtn && !backBtn.dataset.wired) {
+      backBtn.dataset.wired = "1";
+      backBtn.addEventListener("click", () => this.handleLeaderboardBack());
     }
   }
 

@@ -34,7 +34,15 @@
                     <label for="playerPhoneInput">Phone (optional):</label>
                     <input type="tel" id="playerPhoneInput" maxlength="20" placeholder="Enter your phone" autocomplete="tel" inputmode="tel" />
                     <button type="button" id="startPlayButton" class="overlay-play-btn">Play</button>
+                    <button type="button" id="startLeaderboardButton" class="overlay-play-btn overlay-secondary-btn">Leaderboard</button>
                     <p class="controls-hint">Use ← → arrows to move, SPACE to shoot</p>
+                </div>
+                <div id="leaderboard-page" class="leaderboard-page hidden">
+                    <button type="button" id="leaderboardBackButton" class="overlay-play-btn">Back</button>
+                    <h3 class="leaderboard-page-title">Leaderboard</h3>
+                    <div id="leaderboardPageList" class="leaderboard-page-list">
+                        <p class="leaderboard-loading">Loading...</p>
+                    </div>
                 </div>
                 <div id="game-over-overlay" class="overlay hidden">
                     <p id="finalScoreText"></p>
@@ -47,7 +55,7 @@
                     <p id="scoreSavedMessage" class="score-saved hidden">Score saved to leaderboard!</p>
                 </div>
             </main>
-            <aside id="leaderboard-panel" class="side-panel">
+            <aside id="leaderboard-panel" class="side-panel hidden">
                 <h3 class="panel-title">Leaderboard</h3>
                 <div id="leaderboardList" class="leaderboard-list">
                     <p class="leaderboard-loading">Loading...</p>

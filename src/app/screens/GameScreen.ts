@@ -508,7 +508,11 @@ export class GameScreen extends Container {
       this.keys[e.key] = true;
       if (e.key === " " && this.gameState.gameState === "playing") {
         e.preventDefault();
-        this.doShoot();
+        const now = Date.now();
+        if (now - this.lastShootTime > this.shootCooldown) {
+          this.doShoot();
+          this.lastShootTime = now;
+        }
       }
     };
     this.boundKeyUp = (e: KeyboardEvent) => {

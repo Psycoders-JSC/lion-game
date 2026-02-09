@@ -88,7 +88,6 @@ export class GameOverScreen extends Container {
           fontSize: 28,
         },
       }),
-      textOffset: { x: 0, y: -13 },
       defaultTextAnchor: 0.5,
       scale: 0.9,
       animations: {

@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { SUPABASE_CONFIG } from "../../../config";
+import { SUPABASE_CONFIG } from "../../../config.example";
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -8,13 +8,24 @@ export interface SupabaseConfig {
   supabaseKey: string;
 }
 
+function isPlaceholderConfig(config: SupabaseConfig): boolean {
+  return (
+    config.supabaseUrl.includes("YOUR_PROJECT") ||
+    config.supabaseKey.includes("YOUR_ANON")
+  );
+}
+
 function getConfig(): SupabaseConfig | null {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
   if (url && key) {
     return { supabaseUrl: url, supabaseKey: key };
   }
-  if (SUPABASE_CONFIG.supabaseUrl && SUPABASE_CONFIG.supabaseKey) {
+  if (
+    SUPABASE_CONFIG.supabaseUrl &&
+    SUPABASE_CONFIG.supabaseKey &&
+    !isPlaceholderConfig(SUPABASE_CONFIG)
+  ) {
     return SUPABASE_CONFIG;
   }
   return null;

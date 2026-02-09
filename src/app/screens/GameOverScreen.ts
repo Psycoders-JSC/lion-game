@@ -11,6 +11,7 @@ import {
 } from "../services/leaderboard";
 
 const PLAYER_NAME_KEY = "jamInvaderPlayerName";
+const PLAYER_PHONE_KEY = "jamInvaderPlayerPhone";
 
 const BTN_WIDTH = 220;
 const BTN_HEIGHT = 56;
@@ -133,16 +134,16 @@ export class GameOverScreen extends Container {
     this.titleText.text = _won
       ? "Congratulations! You Completed All Levels!"
       : "Game Over!";
-    this.scoreText.text = `Final Score: ${_finalScore}`;
-    this.highScoreText.text =
-      _wasNewHighScore
-        ? `High Score: ${_highScore} (New!)`
-        : `High Score: ${_highScore}`;
+    this.scoreText.text = `Your Score: ${_finalScore}`;
+    this.highScoreText.text = _wasNewHighScore
+      ? `High Score: ${_highScore} (New!)`
+      : `High Score: ${_highScore}`;
 
     if (isLeaderboardAvailable()) {
       const playerName = storage.getString(PLAYER_NAME_KEY) ?? "";
+      const playerPhone = storage.getString(PLAYER_PHONE_KEY) ?? "";
       if (playerName) {
-        await saveScore(playerName, _finalScore);
+        await saveScore(playerName, _finalScore, playerPhone || undefined);
       }
     }
 
@@ -184,7 +185,10 @@ export class GameOverScreen extends Container {
     const scoreSize = Math.max(18, Math.min(28, width * 0.07));
     (this.titleText.style as { fontSize?: number }).fontSize = titleSize;
     (this.scoreText.style as { fontSize?: number }).fontSize = scoreSize;
-    (this.highScoreText.style as { fontSize?: number }).fontSize = Math.max(14, scoreSize - 4);
+    (this.highScoreText.style as { fontSize?: number }).fontSize = Math.max(
+      14,
+      scoreSize - 4,
+    );
 
     this.titleText.position.set(centerX, centerY - 80);
     this.scoreText.position.set(centerX, centerY - 25);

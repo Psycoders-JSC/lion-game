@@ -27,7 +27,7 @@ export class PowerUp extends Sprite {
     this.type = type;
     this.scale.set(scale);
     this.position.set(x, y);
-    this.dropSpeed = 5 * scale;
+    this.dropSpeed = 20 * scale;
   }
 
   public update(): void {

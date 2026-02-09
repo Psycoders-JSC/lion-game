@@ -4,6 +4,7 @@
 CREATE TABLE IF NOT EXISTS high_scores (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     player_name VARCHAR(50) NOT NULL,
+    player_phone VARCHAR(20),
     score INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -30,3 +31,6 @@ CREATE POLICY "Allow public read on high_scores" ON high_scores
 
 CREATE POLICY "Allow public insert on high_scores" ON high_scores
   FOR INSERT WITH CHECK (true);
+
+-- If high_scores already exists, add player_phone column:
+-- ALTER TABLE high_scores ADD COLUMN IF NOT EXISTS player_phone VARCHAR(20);

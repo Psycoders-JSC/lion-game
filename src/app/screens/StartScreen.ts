@@ -11,7 +11,7 @@ import { GameScreen } from "./GameScreen";
 const PLAYER_NAME_KEY = "jamInvaderPlayerName";
 const PLAYER_PHONE_KEY = "jamInvaderPlayerPhone";
 
-/** Start screen: player name input, Asmaa background, Jam Invader title */
+/** Start screen: player name input, Asmaa background, Chips invaders title */
 export class StartScreen extends Container {
   public static assetBundles = ["game", "main"];
 
@@ -28,7 +28,7 @@ export class StartScreen extends Container {
     this.addChild(this.backgroundSprite);
 
     this.titleText = new Text({
-      text: "Jam Invader",
+      text: "Chips invaders",
       style: {
         fill: 0x00ffff,
         fontSize: 48,

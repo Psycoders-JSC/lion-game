@@ -1,18 +1,17 @@
 import { Sprite, Texture } from "pixi.js";
 
-export type FruitType = "strawberry" | "blueberry" | "mango";
+export type EnemyType = "enemy_1" | "enemy_2";
 
-export const FRUIT_TYPES: FruitType[] = ["strawberry", "blueberry", "mango"];
+export const ENEMY_TYPES: EnemyType[] = ["enemy_1", "enemy_2"];
 
-export const FRUIT_COLORS: Record<FruitType, number> = {
-  strawberry: 0x8b4513,
-  blueberry: 0x2962ff,
-  mango: 0xffca28,
+export const ENEMY_COLORS: Record<EnemyType, number> = {
+  enemy_1: 0xff1744,
+  enemy_2: 0x2962ff,
 };
 
-/** Fruit enemy - grid movement, shoots seeds */
+/** Enemy - grid movement, shoots seeds. Scale is computed from texture size so different image sizes display consistently. */
 export class Enemy extends Sprite {
-  public type: FruitType;
+  public type: EnemyType;
   public direction = 1;
   public speed: number;
   public shootCooldown = 0;
@@ -21,17 +20,23 @@ export class Enemy extends Sprite {
   constructor(
     x: number,
     y: number,
-    type: FruitType,
-    scale: number,
+    type: EnemyType,
+    targetDisplaySize: number,
     speed: number,
     shootInterval: number,
   ) {
     const texturePath = `game/${type}.png`;
+    const texture = Texture.from(texturePath);
     super({
-      texture: Texture.from(texturePath),
+      texture,
       anchor: 0,
     });
     this.type = type;
+    const tex = this.texture;
+    const sourceW = tex.width || 1;
+    const sourceH = tex.height || 1;
+    const maxDim = Math.max(sourceW, sourceH, 1);
+    const scale = targetDisplaySize / maxDim;
     this.scale.set(scale);
     this.position.set(x, y);
     this.speed = speed;

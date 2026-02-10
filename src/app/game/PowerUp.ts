@@ -8,10 +8,10 @@ export type PowerUpType =
   | "extraLives";
 
 const POWER_UP_SPRITES: Record<PowerUpType, string> = {
-  fireSpeed: "game/products/Raspberry_1.png",
+  fireSpeed: "game/products/Blueberry_1.png",
   moveSpeed: "game/products/Mango_1_0.png",
   extraColumn: "game/products/Blueberry_1.png",
-  extraLives: "game/products/Carrot_1.png",
+  extraLives: "game/products/Blueberry_1.png",
 };
 
 /** Droppable power-up - Vitrac jam product sprite, drifts down for collection */

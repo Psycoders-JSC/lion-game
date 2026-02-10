@@ -5,9 +5,9 @@ import { engine } from "../getEngine";
 import { Bullet } from "../game/Bullet";
 import {
   Enemy,
-  FRUIT_COLORS,
-  FRUIT_TYPES,
-  type FruitType,
+  ENEMY_COLORS,
+  ENEMY_TYPES,
+  type EnemyType,
 } from "../game/Enemy";
 import { GameState } from "../game/GameState";
 import { Particle } from "../game/Particle";
@@ -16,7 +16,6 @@ import { Player } from "../game/Player";
 import { Seed } from "../game/Seed";
 import {
   getBulletScale,
-  getEnemyScale,
   getPowerUpScale,
   getSeedScale,
   SPRITE_CONFIG,
@@ -94,9 +93,9 @@ export class GameScreen extends Container {
 
     this.background = new Sprite({
       texture: Texture.from("game/background.png"),
+      anchor: 0.5,
     });
-    this.background.width = w;
-    this.background.height = h;
+    this.applyBackgroundCover(w, h);
     this.addChild(this.background);
 
     this.gameContainer = new Container();
@@ -162,12 +161,23 @@ export class GameScreen extends Container {
     }
   }
 
+  private applyBackgroundCover(w: number, h: number): void {
+    const tex = this.background.texture;
+    const texW = tex?.width ?? 1;
+    const texH = tex?.height ?? 1;
+    const scaleX = w / texW;
+    const scaleY = h / texH;
+    const coverScale = Math.max(scaleX, scaleY);
+    this.background.position.set(w / 2, h / 2);
+    this.background.scale.set(coverScale);
+  }
+
   private initEnemies(): void {
     const { level } = this.gameState;
     const w = this.gameState.screenWidth;
-    const enemyScale = getEnemyScale(w);
+    const targetDisplaySize = SPRITE_CONFIG.enemy.targetWidth * (w / 360);
 
-    const fruitType: FruitType = FRUIT_TYPES[(level - 1) % FRUIT_TYPES.length];
+    const enemyType: EnemyType = ENEMY_TYPES[(level - 1) % ENEMY_TYPES.length];
     const baseRows = 2;
     const baseCols = 4;
     const wantedRows = Math.min(baseRows + Math.floor(level / 2), 6);
@@ -175,7 +185,7 @@ export class GameScreen extends Container {
 
     const margin = 8 * (w / 360);
     const gap = 8 * (w / 360);
-    const enemyWidth = SPRITE_CONFIG.enemy.targetWidth * (w / 360);
+    const enemyWidth = targetDisplaySize;
     const enemyHeight = enemyWidth;
 
     const maxCols = Math.max(
@@ -192,7 +202,7 @@ export class GameScreen extends Container {
     const spacingY = enemyHeight + 6 * (w / 360);
 
     const baseSpeed = 0.5 + (level - 1) * 0.25;
-    const speed = baseSpeed * enemyScale;
+    const speed = baseSpeed * (targetDisplaySize / SPRITE_CONFIG.enemy.maxTextureWidth);
     const shootInterval = Math.max(60, 180 - (level - 1) * 10);
 
     for (let row = 0; row < rows; row++) {
@@ -200,8 +210,8 @@ export class GameScreen extends Container {
         const enemy = new Enemy(
           startX + col * spacingX,
           startY + row * spacingY,
-          fruitType,
-          enemyScale,
+          enemyType,
+          targetDisplaySize,
           speed,
           shootInterval,
         );
@@ -488,7 +498,7 @@ export class GameScreen extends Container {
       if (enemy.update()) {
         const seedScale = getSeedScale(w);
         const seedSpeed = (3 + (this.gameState.level - 1) * 0.3) * seedScale;
-        const color = FRUIT_COLORS[enemy.type];
+        const color = ENEMY_COLORS[enemy.type];
         const seed = new Seed(
           enemy.x + enemy.width / 2,
           enemy.y + enemy.height,
@@ -508,15 +518,10 @@ export class GameScreen extends Container {
         const enemy = this.enemies[ei];
         const er = enemy.getRect();
         if (this.checkCollision(br, er)) {
-          const colors: Record<FruitType, number> = {
-            strawberry: 0xff1744,
-            blueberry: 0x2962ff,
-            mango: 0xffca28,
-          };
           this.createExplosion(
             enemy.x + enemy.width / 2,
             enemy.y + enemy.height / 2,
-            colors[enemy.type] ?? 0xff1744,
+            ENEMY_COLORS[enemy.type] ?? 0xff1744,
             20,
             8,
             1,
@@ -604,8 +609,7 @@ export class GameScreen extends Container {
     this.gameState.screenHeight = h;
 
     if (this.background) {
-      this.background.width = w;
-      this.background.height = h;
+      this.applyBackgroundCover(w, h);
     }
     const showControls = isTouchDevice() && isMobileMode(w);
     if (this.player) {

@@ -1,6 +1,6 @@
 ---
-name: Vitrac Jam Invader PixiJS
-overview: "Recreate Jam Invader (Strawberry Invader) as a PixiJS space shooter: copy assets from vitrac-game-example, implement core mechanics, integrate Supabase leaderboard, and upgrade visuals/game feel while preserving the neon/space theme."
+name: Vitrac Chips invaders PixiJS
+overview: "Recreate Chips invaders (Strawberry Invader) as a PixiJS space shooter: copy assets from vitrac-game-example, implement core mechanics, integrate Supabase leaderboard, and upgrade visuals/game feel while preserving the neon/space theme."
 todos:
   - id: copy-assets
     content: Copy assets from vitrac-game-example to raw-assets/game{m}/ and configure AssetPack bundle
@@ -29,11 +29,11 @@ todos:
 isProject: false
 ---
 
-# Vitrac Jam Invader - PixiJS Recreation Plan
+# Vitrac Chips invaders - PixiJS Recreation Plan
 
 ## Summary
 
-Port the HTML5 Canvas Jam Invader game from [D:\vitrac-game-example](D:\vitrac-game-example) to the PixiJS project, copying all sprites and assets, connecting to Supabase for the leaderboard, and upgrading visuals/game feel while keeping the neon/space vibe.
+Port the HTML5 Canvas Chips invaders game from [D:\vitrac-game-example](D:\vitrac-game-example) to the PixiJS project, copying all sprites and assets, connecting to Supabase for the leaderboard, and upgrading visuals/game feel while keeping the neon/space vibe.
 
 ---
 
@@ -104,7 +104,7 @@ flowchart LR
 
 | Screen             | Purpose                                                                                      |
 | ------------------ | -------------------------------------------------------------------------------------------- |
-| **StartScreen**    | Replace LoadScreen as entry; player name input, Asmaa avatar, Jam Invader title, Play button |
+| **StartScreen**    | Replace LoadScreen as entry; player name input, Asmaa avatar, Chips invaders title, Play button |
 | **GameScreen**     | Main gameplay (player, enemies, bullets, seeds, background)                                  |
 | **GameOverScreen** | Final score, coupon (if new high score), leaderboard submit, Play Again                      |
 

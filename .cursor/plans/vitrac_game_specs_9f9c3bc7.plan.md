@@ -9,7 +9,7 @@ isProject: false
 
 ## Game Identity
 
-- **Project names**: "Strawberry Invader" (README), "Jam Invader" (UI)
+- **Project names**: "Strawberry Invader" (README), "Chips invaders" (UI)
 - **Genre**: Space shooter (Chicken Invader–style)
 - **Tech stack**: HTML5 Canvas, vanilla JavaScript, CSS3
 - **Brand**: Vitrac (heromea.com) – jam/preserve products

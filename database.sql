@@ -1,4 +1,4 @@
--- Supabase Database Structure for Jam Invader
+-- Supabase Database Structure for Chips invaders
 -- Run this in Supabase SQL Editor to create the high_scores table
 
 CREATE TABLE IF NOT EXISTS high_scores (

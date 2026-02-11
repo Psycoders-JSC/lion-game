@@ -32,7 +32,15 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npx tsc && npx vite build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "Missing Supabase credentials. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY repository secrets."
+            exit 1
+          fi
+          npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

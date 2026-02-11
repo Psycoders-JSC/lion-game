@@ -28,10 +28,7 @@ import {
   MOVE_BUTTON_SIZE,
   MoveButtons,
 } from "../ui/MoveButtons";
-import {
-  isLeaderboardAvailable,
-  saveScore,
-} from "../services/leaderboard";
+import { isLeaderboardAvailable, saveScore } from "../services/leaderboard";
 import { GameOverScreen } from "./GameOverScreen";
 
 const PLAYER_NAME_KEY = "jamInvaderPlayerName";
@@ -129,21 +126,36 @@ export class GameScreen extends Container {
     const fontSize = Math.max(14, Math.min(24, w * 0.055));
     this.scoreText = new Text({
       text: `Score: ${this.gameState.score}`,
-      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: {
+        fontFamily: "Poppins",
+        fill: 0x00ffff,
+        fontSize,
+        fontWeight: "bold",
+      },
     });
     this.scoreText.position.set(8, 8);
     this.addChild(this.scoreText);
 
     this.livesText = new Text({
       text: `Lives: ${this.gameState.lives}`,
-      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: {
+        fontFamily: "Poppins",
+        fill: 0x00ffff,
+        fontSize,
+        fontWeight: "bold",
+      },
     });
     this.livesText.position.set(8, 8 + fontSize + 4);
     this.addChild(this.livesText);
 
     this.levelText = new Text({
       text: `Level: ${this.gameState.level}`,
-      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: {
+        fontFamily: "Poppins",
+        fill: 0x00ffff,
+        fontSize,
+        fontWeight: "bold",
+      },
     });
     this.levelText.position.set(8, 8 + (fontSize + 4) * 2);
     this.addChild(this.levelText);

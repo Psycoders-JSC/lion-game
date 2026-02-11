@@ -1,6 +1,6 @@
 /** Sprite scaling for mobile base 360px width. Textures are high-res; we scale to design size. */
 export const SPRITE_CONFIG = {
-  /** Target pixel sizes on 360px base (player at half size) */
+  /** Target pixel sizes on 360px base (player at double size) */
   player: { targetWidth: 25, textureWidth: 532 },
   enemy: { targetWidth: 36, maxTextureWidth: 440 },
   bullet: { targetWidth: 12, textureWidth: 16 },

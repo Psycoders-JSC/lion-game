@@ -1,17 +1,12 @@
 import { FancyButton } from "@pixi/ui";
 import { Container, Graphics, Text } from "pixi.js";
 
-import { storage } from "../../engine/utils/storage";
 import { engine } from "../getEngine";
 import { Label } from "../ui/Label";
 import {
   fetchLeaderboard,
   isLeaderboardAvailable,
-  saveScore,
 } from "../services/leaderboard";
-
-const PLAYER_NAME_KEY = "jamInvaderPlayerName";
-const PLAYER_PHONE_KEY = "jamInvaderPlayerPhone";
 
 const BTN_WIDTH = 220;
 const BTN_HEIGHT = 56;
@@ -22,7 +17,7 @@ function createNeonButtonView(fillColor: number) {
     .roundRect(0, 0, BTN_WIDTH, BTN_HEIGHT, BTN_RADIUS)
     .fill({ color: fillColor, alpha: 0.95 })
     .roundRect(0, 0, BTN_WIDTH, BTN_HEIGHT, BTN_RADIUS)
-    .stroke({ width: 2, color: 0x00ffff });
+    .stroke({ width: 3, color: 0xd4a84b });
 }
 
 /** Game over screen: final score, coupon, leaderboard, Play Again */
@@ -46,6 +41,7 @@ export class GameOverScreen extends Container {
     this.titleText = new Text({
       text: "Game Over!",
       style: {
+        fontFamily: "Poppins",
         fill: 0x00ffff,
         fontSize: 48,
         fontWeight: "bold",
@@ -58,6 +54,7 @@ export class GameOverScreen extends Container {
     this.scoreText = new Text({
       text: "Score: 0",
       style: {
+        fontFamily: "Poppins",
         fill: 0xffffff,
         fontSize: 28,
         align: "center",
@@ -69,6 +66,7 @@ export class GameOverScreen extends Container {
     this.highScoreText = new Text({
       text: "High Score: 0",
       style: {
+        fontFamily: "Poppins",
         fill: 0xffffff,
         fontSize: 24,
         align: "center",
@@ -85,6 +83,7 @@ export class GameOverScreen extends Container {
       text: new Label({
         text: "Play Again",
         style: {
+          fontFamily: "Poppins",
           fill: 0x00ffff,
           align: "center",
           fontSize: 28,
@@ -120,6 +119,7 @@ export class GameOverScreen extends Container {
       text: new Label({
         text: "Main Menu",
         style: {
+          fontFamily: "Poppins",
           fill: 0x00ffff,
           align: "center",
           fontSize: 28,
@@ -180,13 +180,7 @@ export class GameOverScreen extends Container {
       ? `High Score: ${_highScore} (New!)`
       : `High Score: ${_highScore}`;
 
-    if (isLeaderboardAvailable()) {
-      const playerName = storage.getString(PLAYER_NAME_KEY) ?? "";
-      const playerPhone = storage.getString(PLAYER_PHONE_KEY) ?? "";
-      if (playerName) {
-        await saveScore(playerName, _finalScore, playerPhone || undefined);
-      }
-    }
+    /* Score is saved to Supabase in GameScreen.showGameOver() before transitioning here */
 
     await this.renderLeaderboard();
     document.getElementById("game-over-overlay")?.classList.add("hidden");

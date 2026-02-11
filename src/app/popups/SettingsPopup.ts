@@ -50,6 +50,7 @@ export class SettingsPopup extends Container {
     this.title = new Label({
       text: "Settings",
       style: {
+        fontFamily: "Poppins",
         fill: 0xec1561,
         fontSize: 50,
       },
@@ -65,6 +66,7 @@ export class SettingsPopup extends Container {
     this.versionLabel = new Label({
       text: `Version ${APP_VERSION}`,
       style: {
+        fontFamily: "Poppins",
         fill: 0xffffff,
         fontSize: 12,
       },

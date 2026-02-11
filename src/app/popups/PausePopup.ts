@@ -35,7 +35,7 @@ export class PausePopup extends Container {
 
     this.title = new Label({
       text: "Paused",
-      style: { fill: 0xec1561, fontSize: 50 },
+      style: { fontFamily: "Poppins", fill: 0xec1561, fontSize: 50 },
     });
     this.title.y = -80;
     this.panel.addChild(this.title);

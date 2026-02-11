@@ -1,6 +1,7 @@
 import type { Ticker } from "pixi.js";
 import { Container, Sprite, Text, Texture } from "pixi.js";
 
+import { storage } from "../../engine/utils/storage";
 import { engine } from "../getEngine";
 import { Bullet } from "../game/Bullet";
 import {
@@ -27,7 +28,14 @@ import {
   MOVE_BUTTON_SIZE,
   MoveButtons,
 } from "../ui/MoveButtons";
+import {
+  isLeaderboardAvailable,
+  saveScore,
+} from "../services/leaderboard";
 import { GameOverScreen } from "./GameOverScreen";
+
+const PLAYER_NAME_KEY = "jamInvaderPlayerName";
+const PLAYER_PHONE_KEY = "jamInvaderPlayerPhone";
 
 /** Main gameplay screen */
 export class GameScreen extends Container {
@@ -121,21 +129,21 @@ export class GameScreen extends Container {
     const fontSize = Math.max(14, Math.min(24, w * 0.055));
     this.scoreText = new Text({
       text: `Score: ${this.gameState.score}`,
-      style: { fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
     });
     this.scoreText.position.set(8, 8);
     this.addChild(this.scoreText);
 
     this.livesText = new Text({
       text: `Lives: ${this.gameState.lives}`,
-      style: { fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
     });
     this.livesText.position.set(8, 8 + fontSize + 4);
     this.addChild(this.livesText);
 
     this.levelText = new Text({
       text: `Level: ${this.gameState.level}`,
-      style: { fill: 0x00ffff, fontSize, fontWeight: "bold" },
+      style: { fontFamily: "Poppins", fill: 0x00ffff, fontSize, fontWeight: "bold" },
     });
     this.levelText.position.set(8, 8 + (fontSize + 4) * 2);
     this.addChild(this.levelText);
@@ -144,6 +152,7 @@ export class GameScreen extends Container {
       text: "",
       style: {
         fill: 0x00ffff,
+        fontFamily: "Poppins",
         fontSize: Math.max(24, Math.min(36, w * 0.1)),
         fontWeight: "bold",
         align: "center",
@@ -352,15 +361,25 @@ export class GameScreen extends Container {
     this.gameState.gameState = "playing";
   }
 
-  /** Called when game over - switch to GameOverScreen */
+  /** Called when game over - save to Supabase, then switch to GameOverScreen */
   private showGameOver(
     finalScore: number,
     highScore: number,
     won: boolean,
     wasNewHighScore = false,
   ): void {
+    this.gameState.gameState = "gameover";
     GameOverScreen.setGameOverData(finalScore, highScore, won, wasNewHighScore);
-    engine().navigation.showScreen(GameOverScreen);
+    const saveAndShow = async () => {
+      if (isLeaderboardAvailable() && finalScore > 0) {
+        const playerName =
+          storage.getString(PLAYER_NAME_KEY)?.trim() || "Player";
+        const playerPhone = storage.getString(PLAYER_PHONE_KEY)?.trim() ?? "";
+        await saveScore(playerName, finalScore, playerPhone || undefined);
+      }
+      engine().navigation.showScreen(GameOverScreen);
+    };
+    void saveAndShow();
   }
 
   public update(time: Ticker): void {
@@ -579,6 +598,7 @@ export class GameScreen extends Container {
         if (wasNew) this.gameState.setHighScore(this.gameState.score);
         const hs = Math.max(prevHigh, this.gameState.score);
         this.showGameOver(this.gameState.score, hs, true, wasNew);
+        return;
       }
     }
 

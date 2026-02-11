@@ -50,7 +50,7 @@ Copy from `D:\Lion-game-example\assets\` to `raw-assets/game{m}/`:
 | spaceship.png                                                                            | Player ship          |
 | bullet.png                                                                               | Player bullets       |
 | background.png                                                                           | Game background      |
-| logo-Lion.png                                                                          | Header/logo          |
+| logo-Lion.png                                                                            | Header/logo          |
 | Asmaa.png                                                                                | Start screen avatar  |
 | Raspberry_1.png, Mango_1_0.png, Carrot_1.png, Blueberry_1.png, bCherry_1.png, Strw_1.png | Product panel images |
 
@@ -102,11 +102,11 @@ flowchart LR
 
 
 
-| Screen             | Purpose                                                                                      |
-| ------------------ | -------------------------------------------------------------------------------------------- |
+| Screen             | Purpose                                                                                         |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
 | **StartScreen**    | Replace LoadScreen as entry; player name input, Asmaa avatar, Chips invaders title, Play button |
-| **GameScreen**     | Main gameplay (player, enemies, bullets, seeds, background)                                  |
-| **GameOverScreen** | Final score, coupon (if new high score), leaderboard submit, Play Again                      |
+| **GameScreen**     | Main gameplay (player, enemies, bullets, seeds, background)                                     |
+| **GameOverScreen** | Final score, coupon (if new high score), leaderboard submit, Play Again                         |
 
 
 ### 3.2 Navigation flow

@@ -4,7 +4,7 @@ import { getPlayerScale } from "./spriteScale";
 
 /** Player ship - left/right movement, shoots bullets */
 export class Player extends Sprite {
-  public readonly baseSpeed = 12;
+  public readonly baseSpeed = 24;
 
   private _speed = 8;
   private _scaleFactor = 1;

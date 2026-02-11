@@ -6,7 +6,7 @@ export const ENEMY_TYPES: EnemyType[] = ["enemy_1", "enemy_2"];
 
 export const ENEMY_COLORS: Record<EnemyType, number> = {
   enemy_1: 0xff1744,
-  enemy_2: 0x2962ff,
+  enemy_2: 0x4caf50, // green (was blue 0x2962ff)
 };
 
 /** Enemy - grid movement, shoots seeds. Scale is computed from texture size so different image sizes display consistently. */

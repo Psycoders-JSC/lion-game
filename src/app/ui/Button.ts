@@ -27,6 +27,7 @@ export class Button extends FancyButton {
       text: new Label({
         text: opts.text,
         style: {
+          fontFamily: "Poppins",
           fill: 0x4a4a4a,
           align: "center",
           fontSize: opts.fontSize,

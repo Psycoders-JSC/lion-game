@@ -63,6 +63,7 @@ export class VolumeSlider extends Slider {
     this.messageLabel = new Label({
       text: label,
       style: {
+        fontFamily: "Poppins",
         align: "left",
         fill: 0x4a4a4a,
         fontSize: 18,

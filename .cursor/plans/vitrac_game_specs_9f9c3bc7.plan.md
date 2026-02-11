@@ -91,7 +91,7 @@ isProject: false
 | `spaceship.png`                                          | Player ship          |
 | `bullet.png`                                             | Player bullets       |
 | `background.png`                                         | Game background      |
-| `logo-Lion.png`                                        | Header logo          |
+| `logo-Lion.png`                                          | Header logo          |
 | `Asmaa.png`                                              | Start screen avatar  |
 | `Raspberry_1.png`, `Mango_1_0.png`, `Carrot_1.png`, etc. | Product panel images |
 

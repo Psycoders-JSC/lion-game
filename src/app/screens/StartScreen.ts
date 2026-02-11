@@ -30,6 +30,7 @@ export class StartScreen extends Container {
     this.titleText = new Text({
       text: "Chips invaders",
       style: {
+        fontFamily: "Poppins",
         fill: 0x00ffff,
         fontSize: 48,
         fontWeight: "bold",

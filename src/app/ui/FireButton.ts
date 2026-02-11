@@ -11,7 +11,7 @@ function createFireButtonView(fillColor: number, alpha: number) {
     .roundRect(0, 0, SIZE, SIZE, RADIUS)
     .fill({ color: fillColor, alpha })
     .roundRect(0, 0, SIZE, SIZE, RADIUS)
-    .stroke({ width: 2, color: 0x00ffff });
+    .stroke({ width: 3, color: 0xd4a84b });
 }
 
 /**
@@ -28,6 +28,7 @@ export class FireButton extends FancyButton {
       text: new Label({
         text: "FIRE",
         style: {
+          fontFamily: "Poppins",
           fill: 0x00ffff,
           align: "center",
           fontSize: 14,

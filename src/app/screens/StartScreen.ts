@@ -11,6 +11,14 @@ import { GameScreen } from "./GameScreen";
 const PLAYER_NAME_KEY = "jamInvaderPlayerName";
 const PLAYER_PHONE_KEY = "jamInvaderPlayerPhone";
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 /** Start screen: player name input, Asmaa background, Chips invaders title */
 export class StartScreen extends Container {
   public static assetBundles = ["game", "main"];
@@ -62,9 +70,10 @@ export class StartScreen extends Container {
             `<div class="leaderboard-entry">${i + 1}. ${e.player_name}: ${e.score}</div>`,
         )
         .join("");
-    } catch {
-      listEl.innerHTML =
-        '<p class="leaderboard-empty">Failed to load leaderboard.</p>';
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to load leaderboard.";
+      listEl.innerHTML = `<p class="leaderboard-empty">Failed to load leaderboard. ${escapeHtml(msg)}</p>`;
     }
   }
 

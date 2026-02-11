@@ -12,6 +12,14 @@ const BTN_WIDTH = 220;
 const BTN_HEIGHT = 56;
 const BTN_RADIUS = 12;
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function createNeonButtonView(fillColor: number) {
   return new Graphics()
     .roundRect(0, 0, BTN_WIDTH, BTN_HEIGHT, BTN_RADIUS)
@@ -206,9 +214,10 @@ export class GameOverScreen extends Container {
             `<div class="leaderboard-entry">${i + 1}. ${e.player_name}: ${e.score}</div>`,
         )
         .join("");
-    } catch {
-      listEl.innerHTML =
-        '<p class="leaderboard-empty">Failed to load leaderboard.</p>';
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to load leaderboard.";
+      listEl.innerHTML = `<p class="leaderboard-empty">Failed to load leaderboard. ${escapeHtml(msg)}</p>`;
     }
   }
 
@@ -216,7 +225,10 @@ export class GameOverScreen extends Container {
     const centerX = width * 0.5;
     const centerY = height * 0.5;
 
-    const titleSize = Math.max(24, Math.min(40, width * 0.1));
+    const isLongTitle = this.titleText.text.includes("Congratulations");
+    const titleSize = isLongTitle
+      ? Math.max(18, Math.min(28, width * 0.065))
+      : Math.max(24, Math.min(40, width * 0.1));
     const scoreSize = Math.max(18, Math.min(28, width * 0.07));
     (this.titleText.style as { fontSize?: number }).fontSize = titleSize;
     (this.scoreText.style as { fontSize?: number }).fontSize = scoreSize;

@@ -4,6 +4,9 @@ import {
   isSupabaseConfigured,
 } from "../../engine/supabase/supabase";
 
+/** Supabase table name. Must match your Supabase table (e.g. high_scores or high_score). */
+const LEADERBOARD_TABLE = "high_scores";
+
 export interface LeaderboardEntry {
   player_name: string;
   player_phone?: string;
@@ -18,14 +21,14 @@ export async function fetchLeaderboard(
     return [];
   }
   const { data, error } = await client
-    .from("high_scores")
+    .from(LEADERBOARD_TABLE)
     .select("player_name, player_phone, score")
     .gt("score", 0)
     .order("score", { ascending: false })
     .limit(limit);
   if (error) {
     console.warn("Failed to fetch leaderboard:", error);
-    return [];
+    throw new Error(error.message || "Failed to fetch leaderboard");
   }
   return (data ?? []).filter((e) => e.score > 0);
 }
@@ -48,7 +51,7 @@ export async function saveScore(
     };
   const phone = playerPhone?.trim();
   if (phone) payload.player_phone = phone;
-  const { error } = await client.from("high_scores").insert(payload);
+  const { error } = await client.from(LEADERBOARD_TABLE).insert(payload);
   if (error) {
     console.warn("Failed to save score:", error);
     return false;

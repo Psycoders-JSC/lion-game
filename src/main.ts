@@ -4,6 +4,7 @@ import { setEngine } from "./app/getEngine";
 import { StartScreen } from "./app/screens/StartScreen";
 import { userSettings } from "./app/utils/userSettings";
 import { CreationEngine } from "./engine/engine";
+import { initSupabaseClient } from "./engine/supabase/supabase";
 
 /**
  * Importing these modules will automatically register there plugins with the engine.
@@ -25,6 +26,9 @@ setEngine(engine);
 
   // Initialize the user settings
   userSettings.init();
+
+  // Initialize Supabase client early so leaderboard/save score work when needed
+  initSupabaseClient();
 
   // Load assets with progress shown on generic HTML overlay
   const loadOverlay = document.getElementById("load-overlay");

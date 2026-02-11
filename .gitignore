@@ -26,4 +26,3 @@ dist-ssr
 public/assets
 .assetpack
 src/manifest.json
-config.ts
